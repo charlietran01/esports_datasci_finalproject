@@ -1,0 +1,73 @@
+---
+title: "Esports: League of Legands"
+author: "*Charlie Tran*"
+date: "12/13/2020"
+output: 
+  html_document:
+    keep_md: TRUE
+    toc: TRUE
+    toc_float: TRUE
+    df_print: paged
+    code_download: true
+---
+
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, echo=FALSE}
+library(tidyverse)     # for data cleaning and plotting
+library(lubridate)     # for date manipulation
+library(ggthemes)      # for more themes (including theme_map())
+library(gganimate)     # for adding animation layers to ggplots
+library(gifski)        # for creating the gif (don't need to load this library every time,but need it installed)
+library(transformr)    # for "tweening" (gganimate)
+library(patchwork)     # for nicely combining ggplot2 graphs  
+library(gt)            # for creating nice tables
+```
+
+```{r data, echo = FALSE}
+GeneralEsportData <- read.csv("GeneralEsportData.csv")
+
+HistoricalEsportData <- read.csv("HistoricalEsportData.csv")
+
+high_diamond_ranked_10min <- read.csv("high_diamond_ranked_10min.csv")
+
+twitchdata <- read.csv("twitchdata.csv")
+
+pro_lol_champs <- read.csv("champion_stats.csv")
+
+pro_lol_matches <- read.csv("matches2020.csv")
+```
+
+## The Growing Esports Industry
+
+-briefly discuss the growing industry and the history and games associated with the industry
+  - end with with introducing the recent competiiton of league of legends and the affeect of the pandemic
+  
+- use the heneral and historical esports data
+  - probably a line graph where the dates can be utilized
+```{r echo = FALSE}
+
+```
+
+## What is League of Legends?
+
+- explain the orgins
+- explain the game, map, and structure of the bases of the game
+  - add pictures of the map and legendary players
+  
+## Professional League of Legends Esports
+
+-use the data and explain its meaning
+- use the high diamond ranked games data 
+- use the pro matches to show the level and difference between diamond and pro player games
+
+```{r echo = FALSE}
+
+```
+
+## Why is this game imapctful to Esports?
+
+# DID YOU UNCOMMENT THE KNIT IN THE BEGINNING?
