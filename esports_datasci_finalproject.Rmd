@@ -28,6 +28,7 @@ library(transformr)    # for "tweening" (gganimate)
 library(patchwork)     # for nicely combining ggplot2 graphs  
 library(gt)            # for creating nice tables
 library(stringr)       # for string conversions
+library(ggimage)       # for reading in images
 ```
 
 ```{r data, echo = FALSE}
@@ -104,12 +105,44 @@ As seen above, in late 1990s to the late 2010s there was a exponential growth in
 These Esports organizations are created with a focus on a specific game and eventually grow from tournament prizes.
 
 ```{r, echo=FALSE}
-team_earnings %>% 
+library(ggimage)
+library(png)
+
+top_team_earnings <- team_earnings %>% 
   arrange(desc(TotalUSDPrize)) %>% 
-  filter(TotalUSDPrize > 9000000) %>% 
+  filter(TotalUSDPrize > 9000000)
+
+teamliquid <- "Team_Liquidlogo.png"
+og <- "OG_Esportslogo.png"
+evilgeniuses <- "eglogo.png"
+fnatic <- "Fnaticlogo_square.png"
+virtus.por <- "Virtus.prologo_square.png"
+newbee <- "Newbeelogo_square.png"
+vicigaming <- "600px-VICI_Gaming.png"
+teamsecret <- "Team_Secret_(Vietnamese_Team)logo_square.png"
+invictusgaming <- "png-transparent-dota-2-asia-championships-2015-the-international-2014-invictus
+                    -gaming-evil-geniuses-others-game-burning-logo.png"
+natusvincere <- "NaVi_logo.png"
+lgdgaming <- "LGD_Gaminglogo_square.png"
+cloud9 <- "1280px-Cloud9_logo.svg.png"
+skt <- "SK_Telecom_T1logo_square.png"
+wingsgaming <- "600px-Wings.png"
+parissaintgermain <- "Paris_Saint-Germain_eSportslogo_square.png"
+fazeclan <- "1200px-Faze_Clan.svg.png"
+
+top_team_images <- tibble(image = list(teamliquid, og, evilgeniuses, fnatic, virtus.por, newbee,
+                                       vicigaming, teamsecret, invictusgaming, natusvincere, lgdgaming,
+                                       cloud9, skt, wingsgaming, parissaintgermain, fazeclan))
+
+top_team_earnings_images <- top_team_earnings %>% 
+  mutate(top_team_images)
+
+top_team_earnings_images %>% 
   ggplot(aes(x = TotalUSDPrize/1000000,
                y = fct_reorder(TeamName, TotalUSDPrize),
-             fill = TotalUSDPrize)) + 
+             fill = TotalUSDPrize))+
+  geom_image(aes(image = image), 
+             size = 0.5)+
   geom_col()+
   theme_minimal()+
   theme(legend.position = "none")+
