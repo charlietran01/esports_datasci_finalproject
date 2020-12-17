@@ -74,6 +74,46 @@ These Esports organizations are created with a focus on a specific game and even
 
 ![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
+The bargraph above shows the top Esports organzations/teams around the world with teams that have contracted professional players who competed in professional matches and earn the tournaments prizes. One of the games that provide one the largest percent of the organization's total earnings is League of Legends
+
+
+```r
+lol_vs_total_earnings <- lol_tournament_earnings %>% 
+  filter(TeamName %in% c("Team Liquid", "OG", "Evil Geniuses", "Fnatic", "Virtus.pro", "Newbee",
+                       "Vici Gaming", "Team Secret", "Invictus Gaming", "Natus Vincere", "LGD Gaming",
+                       "Cloud9", "SK Telecom T1", "Wings Gaming", "Paris Saint-Germain Esports", 
+                       "Faze Clan")) %>% 
+  left_join(top_team_earnings,
+            by = "TeamName") %>% 
+  select(-starts_with("TeamId")) %>% 
+  select(-starts_with("TotalTour")) %>% 
+  pivot_longer(cols = starts_with("TotalUSDPrize"),
+               names_to = "variable",
+               values_to = "prize_earnings")
+
+percentage_lol_earnings <- lol_tournament_earnings %>% 
+  filter(TeamName %in% c("Team Liquid", "OG", "Evil Geniuses", "Fnatic", "Virtus.pro", "Newbee",
+                       "Vici Gaming", "Team Secret", "Invictus Gaming", "Natus Vincere", "LGD Gaming",
+                       "Cloud9", "SK Telecom T1", "Wings Gaming", "Paris Saint-Germain Esports", 
+                       "Faze Clan")) %>% 
+  left_join(top_team_earnings,
+            by = "TeamName") %>% 
+  select(-starts_with("TeamId")) %>% 
+  select(-starts_with("TotalTour")) %>% 
+  mutate(percetage = TotalUSDPrize.x/TotalUSDPrize.y * 100)
+  
+  
+lol_vs_total_earnings %>%
+  ggplot() +
+  geom_col(aes(x = prize_earnings/1000000,
+               y = fct_reorder(TeamName, prize_earnings))) +
+  facet_wrap(vars(variable))
+```
+
+![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+
+
 ## What is League of Legends?
 
 - explain the orgins
