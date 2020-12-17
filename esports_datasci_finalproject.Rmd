@@ -47,6 +47,8 @@ pro_lol_champs <- read.csv("champion_stats.csv")
 pro_lol_matches <- read.csv("matches2020.csv")
 
 team_earnings <- read.csv("ee.csv")
+
+lol_tournament_earnings <- read.csv("lolearningsbyteam.csv")
 ```
 
 ## The Growing Esports Industry
@@ -120,8 +122,7 @@ virtus.por <- "Virtus.prologo_square.png"
 newbee <- "Newbeelogo_square.png"
 vicigaming <- "600px-VICI_Gaming.png"
 teamsecret <- "Team_Secret_(Vietnamese_Team)logo_square.png"
-invictusgaming <- "png-transparent-dota-2-asia-championships-2015-the-international-2014-invictus
-                    -gaming-evil-geniuses-others-game-burning-logo.png"
+invictusgaming <- "png-transparent-dota-2-asia-championships-2015-the-international-2014-invictus-gaming-evil-geniuses-others-game-burning-logo.png"
 natusvincere <- "NaVi_logo.png"
 lgdgaming <- "LGD_Gaminglogo_square.png"
 cloud9 <- "1280px-Cloud9_logo.svg.png"
@@ -130,7 +131,7 @@ wingsgaming <- "600px-Wings.png"
 parissaintgermain <- "Paris_Saint-Germain_eSportslogo_square.png"
 fazeclan <- "1200px-Faze_Clan.svg.png"
 
-top_team_images <- tibble(image = list(teamliquid, og, evilgeniuses, fnatic, virtus.por, newbee,
+top_team_images <- tibble(image = c(teamliquid, og, evilgeniuses, fnatic, virtus.por, newbee,
                                        vicigaming, teamsecret, invictusgaming, natusvincere, lgdgaming,
                                        cloud9, skt, wingsgaming, parissaintgermain, fazeclan))
 
@@ -141,18 +142,55 @@ top_team_earnings_images %>%
   ggplot(aes(x = TotalUSDPrize/1000000,
                y = fct_reorder(TeamName, TotalUSDPrize),
              fill = TotalUSDPrize))+
-  geom_image(aes(image = image), 
-             size = 0.5)+
   geom_col()+
+  geom_image(aes(image = image), 
+             size = 0.05)+
   theme_minimal()+
   theme(legend.position = "none")+
   scale_x_continuous()+
   labs(title = "Total Tournament Earnings by Team",
-       subtitle = "(US Dollars)",
+       subtitle = "(Millions of US Dollars)",
        x = "",
        y = "",
        caption = "Data from EsportsEarnings.com, Created by Charlie Tran")
 ```
+
+The bargraph above shows the top Esports organzations/teams around the world with teams that have contracted professional players who competed in professional matches and earn the tournaments prizes. One of the games that provide one the largest percent of the organization's total earnings is League of Legends
+
+```{r}
+lol_vs_total_earnings <- lol_tournament_earnings %>% 
+  filter(TeamName %in% c("Team Liquid", "OG", "Evil Geniuses", "Fnatic", "Virtus.pro", "Newbee",
+                       "Vici Gaming", "Team Secret", "Invictus Gaming", "Natus Vincere", "LGD Gaming",
+                       "Cloud9", "SK Telecom T1", "Wings Gaming", "Paris Saint-Germain Esports", 
+                       "Faze Clan")) %>% 
+  left_join(top_team_earnings,
+            by = "TeamName") %>% 
+  select(-starts_with("TeamId")) %>% 
+  select(-starts_with("TotalTour")) %>% 
+  pivot_longer(cols = starts_with("TotalUSDPrize"),
+               names_to = "variable",
+               values_to = "prize_earnings")
+
+percentage_lol_earnings <- lol_tournament_earnings %>% 
+  filter(TeamName %in% c("Team Liquid", "OG", "Evil Geniuses", "Fnatic", "Virtus.pro", "Newbee",
+                       "Vici Gaming", "Team Secret", "Invictus Gaming", "Natus Vincere", "LGD Gaming",
+                       "Cloud9", "SK Telecom T1", "Wings Gaming", "Paris Saint-Germain Esports", 
+                       "Faze Clan")) %>% 
+  left_join(top_team_earnings,
+            by = "TeamName") %>% 
+  select(-starts_with("TeamId")) %>% 
+  select(-starts_with("TotalTour")) %>% 
+  mutate(percetage = TotalUSDPrize.x/TotalUSDPrize.y * 100)
+  
+  
+lol_vs_total_earnings %>%
+  ggplot() +
+  geom_col(aes(x = prize_earnings/1000000,
+               y = fct_reorder(TeamName, prize_earnings))) +
+  facet_wrap(vars(variable))
+```
+
+
 
 ## What is League of Legends?
 
