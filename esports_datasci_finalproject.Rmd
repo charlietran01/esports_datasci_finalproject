@@ -211,10 +211,45 @@ But before we can discuss the impact of League of Legends, it is good to know wh
 
 Each team chooses a champion that spawn on the map that have with an assigned role: top lane, mid lane, bot lane, support (also in the bot lane), and jungler. Based of the name of their roles, they will play the game in those repective locations. When the game starts, the lane players (also called laners) meet each other in their lane with a small group of minions that continously respawn and walk from the nexus down their repective lanes, while the jungler traverses through the jungle. In each lane, the laners goal is to kill the minions for earning in game gold and also attempt to kill the opposing enemy laner which also grants them a significant amount more gold. The junglers also earn in game gold by killing the jungler monsters or visiting a lane to kill the enemy. This process of killing minions, monsters, and enemy players goes on as each player accumulates gold in order to purchase specialized items to increase the strength and health of each player's champion. The stronger the champion becomes the higher the chance the team can kill the enemies and push towards their base to destray the nexus and win the match.
 
-The becomes much more complicated when professional players and teams consider the smallest details, stats, and actions. A small mistake by buying the wrong in game item or walking to the wrong area and getting ambushed by the enemy can turn the game around towards the team that would seem to be losing. 
+The becomes much more complicated when professional players and teams consider the smallest details, stats, and actions. A small mistake by buying the wrong in game item or walking to the wrong area and getting ambushed by the enemy can turn the game around towards the team that would seem to be losing. But what statistics will majorly determines the likelihood the team will win?
 
 ```{r}
+lol_blue_side <- high_diamond_ranked_10min %>% 
+  select(-starts_with("red"))
 
+lol_red_side <- high_diamond_ranked_10min %>% 
+  select(-starts_with("blue"))
+
+blueGoldDiff <- high_diamond_ranked_10min %>% 
+  arrange(blueGoldDiff) %>%             
+  filter(blueGoldDiff > 0) %>% 
+  summarise(bluewinrate = sum(oneisblueWins)/n()*100)
+
+redGoldDiff <- high_diamond_ranked_10min %>% 
+  arrange(redGoldDiff) %>% 
+  filter(redGoldDiff > 0) %>% 
+  summarise(redwinrate = (1-sum(oneisblueWins)/n())*100)
+
+bargraph_goldDiff <- tibble(side = c("Blue","Blue", "Red", "Red"), 
+                            iswin = c("win", "lose", "win", "lose"),
+                            winrate = as.numeric(c(blueGoldDiff, 100-blueGoldDiff, redGoldDiff, 100-redGoldDiff)))
+
+
+ggplot(bargraph_goldDiff, aes(x = side, y = winrate, fill = iswin))+
+  geom_bar(stat = "identity", position = 'dodge')+
+  theme_minimal()+
+  scale_fill_discrete(name = NULL,
+                      labels = c("Lose", "Win"))+
+  labs(title =  "Winrates for Teams with a Positive Gold Difference",
+       x = "", 
+       y = "Percent Winrate")
+
+lol_ojectives_lead_towin <- high_diamond_ranked_10min %>% 
+  select(ends_with(c("gameId", "blueWins", "TowersDestroyed", "Dragons", "Heralds", "EliteMonsters"))) %>% 
+  mutate(objective_score_blue = rowSums(lol_ojectives_lead_towin[, c(2,4,6,8)])) %>% 
+  mutate(objective_score_red = rowSums(lol_ojectives_lead_towin[, c(3,5,7,9)])) %>% 
+  mutate(objscore_compare = ifelse((objective_score_blue>objective_score_red) & oneisblueWins ==1, "Expected", "Unexpected"))
+  
 ```
 
 ## Professional League of Legends Esports
