@@ -213,7 +213,7 @@ Each team chooses a champion that spawn on the map that have with an assigned ro
 
 The becomes much more complicated when professional players and teams consider the smallest details, stats, and actions. A small mistake by buying the wrong in game item or walking to the wrong area and getting ambushed by the enemy can turn the game around towards the team that would seem to be losing. But what statistics will majorly determines the likelihood the team will win?
 
-```{r}
+```{r echo=FALSE}
 lol_blue_side <- high_diamond_ranked_10min %>% 
   select(-starts_with("red"))
 
@@ -243,15 +243,40 @@ ggplot(bargraph_goldDiff, aes(x = side, y = winrate, fill = iswin))+
   labs(title =  "Winrates for Teams with a Positive Gold Difference",
        x = "", 
        y = "Percent Winrate")
-
-lol_ojectives_lead_towin <- high_diamond_ranked_10min %>% 
-  select(ends_with(c("gameId", "blueWins", "TowersDestroyed", "Dragons", "Heralds", "EliteMonsters"))) %>% 
-  mutate(objective_score_blue = rowSums(lol_ojectives_lead_towin[, c(2,4,6,8)])) %>% 
-  mutate(objective_score_red = rowSums(lol_ojectives_lead_towin[, c(3,5,7,9)])) %>% 
-  mutate(objscore_compare = ifelse((objective_score_blue>objective_score_red) & oneisblueWins ==1, "Expected", "Unexpected"))
-  
 ```
+```{r echo=FALSE}
 
+lol_objectives_lead_towin <- high_diamond_ranked_10min %>% 
+  select(ends_with(c("gameId", "blueWins", "TowersDestroyed", "Dragons", "Heralds", "EliteMonsters"))) 
+
+lol_objectives_lead_towin <- lol_objectives_lead_towin %>% 
+  mutate(objective_score_blue = rowSums(lol_objectives_lead_towin[, c(2,4,6,8)])) %>% 
+  mutate(objective_score_red = rowSums(lol_objectives_lead_towin[, c(3,5,7,9)])) %>% 
+  mutate(objscore_compare = ifelse((objective_score_blue > objective_score_red) & oneisblueWins ==1, 
+                                   "Expected",
+                                   ifelse((objective_score_blue < objective_score_red) & oneisblueWins == 0, 
+                                          "Expected",
+                                          ifelse(objective_score_blue == objective_score_red, 
+                                                 "Undefined", 
+                                                 "Unexpected"))))
+
+lol_objectives_lead_towin_table <- lol_objectives_lead_towin %>% 
+  mutate(oneisblueWins = ifelse(oneisblueWins == 0, "Loss", "Won")) %>% 
+  select(oneisblueWins, objective_score_blue, objective_score_red, objscore_compare) 
+
+colnames(lol_objectives_lead_towin_table)[1] <- "Blue Team Result"
+colnames(lol_objectives_lead_towin_table)[2] <- "Blue Team Objective Score"
+colnames(lol_objectives_lead_towin_table)[3] <- "Red Team Objective Score"
+colnames(lol_objectives_lead_towin_table)[4] <- "Prediction"
+
+  
+ggplot(lol_objectives_lead_towin, aes(x = objscore_compare))+
+  geom_bar()+
+  labs(title = "Prediction of Diamond Games with Objecctive Score",
+       x = "",
+       y = "Number of Games")+
+  theme_minimal()
+```
 ## Professional League of Legends Esports
 
 -use the data and explain its meaning
