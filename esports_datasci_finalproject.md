@@ -17,55 +17,16 @@ output:
 
 
 
-```
-## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
-```
-
-```
-## v ggplot2 3.3.2     v purrr   0.3.4
-## v tibble  3.0.4     v dplyr   1.0.2
-## v tidyr   1.1.2     v stringr 1.4.0
-## v readr   1.4.0     v forcats 0.5.0
-```
-
-```
-## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
-```
-
-```
-## 
-## Attaching package: 'lubridate'
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     date, intersect, setdiff, union
-```
 
 
 
 ## The Growing Esports Industry
-
--briefly discuss the growing industry and the history and games associated with the industry
-  - end with with introducing the recent competiiton of league of legends and the affeect of the pandemic
-  
-- use the general and historical esports data
-  - probably a line graph where the dates can be utilized
-  
--add images for: Space Invaders, twin galaxies,
   
 The first competitive games started on arcade machines in the late 1970s with Space Invader and Twin Galaxies where the professional players strive to beat each other's record to become the world record holder. In the 1980s, more games were released that many of us know today like Pac-Man. A shift from arcades to gaming consoles occurred with the release of Nintendo systems. The new popularized way of gaming was becoming more accessible to the average consumer than ever before. As Nintendo continued to grow through the 1990s, the fast advancing computer technology became a new and different mode of gaming with personal computers. 
 
+![1980s competitve games](1980sgamespicture.png)
+
 The large amount of competitive users led to organized competitions where tens of millions of fans of the top games follow these matches allowing the game companies to profit. Eventually these competitive matches transformed into a sport known as Esports. Many of the top games help create and influence the start of Esports teams and organizations made of world-class gamers. In total, hundreds of millions of US dollars are profitted from the Esports industries only in terms of prize earnings from professional tournaments. 
-
-```
-## `summarise()` ungrouping output (override with `.groups` argument)
-## `summarise()` ungrouping output (override with `.groups` argument)
-```
-
 ![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
 
 As seen above, in late 1990s to the late 2010s there was a exponential growth in the tournaments' prize earnings from all Esports teams, orgnaizations, and all variety of competitive. In fact the earnings from tournaments in the last 3 years totals to more than the 20 years before! Unfortunately for the Esports industry in 2020, the toll of the COVID-19 pandemic is evident where large gatherings were impossible to view the professional matches. the canceled tournaments destryed the potential of growth of Esports although some game companies like Riot Games worked with the teams to provide a remote competitive experience to provide a fair tournament to take place (more on this later).
@@ -74,52 +35,25 @@ These Esports organizations are created with a focus on a specific game and even
 
 ![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-The bargraph above shows the top Esports organzations/teams around the world with teams that have contracted professional players who competed in professional matches and earn the tournaments prizes. One of the games that provide one the largest percent of the organization's total earnings is League of Legends
-
-
-```r
-lol_vs_total_earnings <- lol_tournament_earnings %>% 
-  filter(TeamName %in% c("Team Liquid", "OG", "Evil Geniuses", "Fnatic", "Virtus.pro", "Newbee",
-                       "Vici Gaming", "Team Secret", "Invictus Gaming", "Natus Vincere", "LGD Gaming",
-                       "Cloud9", "SK Telecom T1", "Wings Gaming", "Paris Saint-Germain Esports", 
-                       "Faze Clan")) %>% 
-  left_join(top_team_earnings,
-            by = "TeamName") %>% 
-  select(-starts_with("TeamId")) %>% 
-  select(-starts_with("TotalTour")) %>% 
-  pivot_longer(cols = starts_with("TotalUSDPrize"),
-               names_to = "variable",
-               values_to = "prize_earnings")
-
-percentage_lol_earnings <- lol_tournament_earnings %>% 
-  filter(TeamName %in% c("Team Liquid", "OG", "Evil Geniuses", "Fnatic", "Virtus.pro", "Newbee",
-                       "Vici Gaming", "Team Secret", "Invictus Gaming", "Natus Vincere", "LGD Gaming",
-                       "Cloud9", "SK Telecom T1", "Wings Gaming", "Paris Saint-Germain Esports", 
-                       "Faze Clan")) %>% 
-  left_join(top_team_earnings,
-            by = "TeamName") %>% 
-  select(-starts_with("TeamId")) %>% 
-  select(-starts_with("TotalTour")) %>% 
-  mutate(percetage = TotalUSDPrize.x/TotalUSDPrize.y * 100)
-  
-  
-lol_vs_total_earnings %>%
-  ggplot() +
-  geom_col(aes(x = prize_earnings/1000000,
-               y = fct_reorder(TeamName, prize_earnings))) +
-  facet_wrap(vars(variable))
-```
+The bargraph above shows the top Esports organzations/teams around the world with teams that have contracted professional players who competed in professional matches and earn the tournaments prizes. One of the games that provide one the largest percent of the organization's total earnings is League of Legends.
 
 ![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
-
+Of the top four Esports teams that have earned the majority of their prize from professional tournaments from League of Legends, the three teams, SK Telecom T1, Invictus Gaming, and Fnatic, have all won the international League of Legends Worlds tournament. League of legends have impacted the massive growth of the largest Esports teams in the world.
 
 ## What is League of Legends?
 
-- explain the orgins
-- explain the game, map, and structure of the bases of the game
-  - add pictures of the map and legendary players
-  
+![Map of League of Legends - Summoner's Rift](Summoner's_Rift_Update_Map.png)
+
+
+But before we can discuss the impact of League of Legends, it is good to know what the praise and large following of the game is about. Created in 2009, League legends is a team multiplayer online battle arena where the two teams made of 5 players where the goal is to defeat the enemies' "nexus" or their base located on opposite sides of the map. The map, called "Summoner's Rift, is split by three lanes lined with three turrets in each lane and two more turrets protecting the nexus for each side of the map. In between each lane is an area known as the jungle where jungle monsters (raptors, krugs, wolves, gromp, golem, blue sentinel, and red brambleback)reside. There is also a river that runs across the map with pits home to the Rift Herald, Baron Nashor, and Elemental Dragons. 
+
+Each team chooses a champion that spawn on the map that have with an assigned role: top lane, mid lane, bot lane, support (also in the bot lane), and jungler. Based of the name of their roles, they will play the game in those repective locations. When the game starts, the lane players (also called laners) meet each other in their lane with a small group of minions that continously respawn and walk from the nexus down their repective lanes, while the jungler traverses through the jungle. In each lane, the laners goal is to kill the minions for earning in game gold and also attempt to kill the opposing enemy laner which also grants them a significant amount more gold. The junglers also earn in game gold by killing the jungler monsters or visiting a lane to kill the enemy. This process of killing minions, monsters, and enemy players goes on as each player accumulates gold in order to purchase specialized items to increase the strength and health of each player's champion. The stronger the champion becomes the higher the chance the team can kill the enemies and push towards their base to destray the nexus and win the match.
+
+The becomes much more complicated when professional players and teams consider the smallest details, stats, and actions. A small mistake by buying the wrong in game item or walking to the wrong area and getting ambushed by the enemy can turn the game around towards the team that would seem to be losing. 
+
+
+
 ## Professional League of Legends Esports
 
 -use the data and explain its meaning
@@ -130,4 +64,3 @@ lol_vs_total_earnings %>%
 
 ## Why is this game imapctful to Esports?
 
-## DID YOU UNCOMMENT THE KNIT IN THE BEGINNING?
