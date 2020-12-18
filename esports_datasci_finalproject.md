@@ -127,6 +127,88 @@ In order for you to have the best chance possible to win the game, it is extreme
 ![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
+```
+## Warning: Problem with `mutate()` input `t1_elders`.
+## i NAs introduced by coercion
+## i Input `t1_elders` is `.Primitive("as.double")(t1_elders)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t2_elders`.
+## i NAs introduced by coercion
+## i Input `t2_elders` is `.Primitive("as.double")(t2_elders)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t1_heralds`.
+## i NAs introduced by coercion
+## i Input `t1_heralds` is `.Primitive("as.double")(t1_heralds)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t2_heralds`.
+## i NAs introduced by coercion
+## i Input `t2_heralds` is `.Primitive("as.double")(t2_heralds)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t1_firsttothreetowers`.
+## i NAs introduced by coercion
+## i Input `t1_firsttothreetowers` is `.Primitive("as.double")(t1_firsttothreetowers)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t2_firsttothreetowers`.
+## i NAs introduced by coercion
+## i Input `t2_firsttothreetowers` is `.Primitive("as.double")(t2_firsttothreetowers)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t1_inhibitors`.
+## i NAs introduced by coercion
+## i Input `t1_inhibitors` is `.Primitive("as.double")(t1_inhibitors)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+```
+## Warning: Problem with `mutate()` input `t2_inhibitors`.
+## i NAs introduced by coercion
+## i Input `t2_inhibitors` is `.Primitive("as.double")(t2_inhibitors)`.
+```
+
+```
+## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion
+```
+
+![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
 ## Why is this game imapctful to Esports?
 
 - TALK ABOUT TWITCH   

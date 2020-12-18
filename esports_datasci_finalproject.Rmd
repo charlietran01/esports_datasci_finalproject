@@ -52,7 +52,10 @@ lol_tournament_earnings <- read.csv("lolearningsbyteam.csv")
 pro_indepth_stats <- read.csv("08_19_2020.csv") %>% 
   filter(league %in% c("LPL", "LCS", "LCK", "LEC")) %>% 
   select(c("league", "patch", ends_with(c("dragons", "elders", "heralds", "barons", "towers", "inhibitors", "totalgold", "result")))) %>% 
-  arrange(league)
+  arrange(league) %>% 
+  mutate_all(~replace(., is.na(.), 0))
+  
+twitch_games <- read.csv("Twitch_game_data.csv")
 ```
 
 ## The Growing Esports Industry
@@ -292,12 +295,14 @@ lol_objectives_lead_towin <- lol_objectives_lead_towin %>%
 # colnames(lol_objectives_lead_towin_table)[4] <- "Prediction"
 
   
-ggplot(lol_objectives_lead_towin, aes(x = objscore_compare))+
+soloq_objscore <- ggplot(lol_objectives_lead_towin, aes(x = objscore_compare))+
   geom_bar()+
-  labs(title = "Prediction of Diamond Games Given Objective Score",
+  labs(title = "Prediction of Diamond Games \nGiven Objective Score",
        x = "",
        y = "Number of Games")+
   theme_minimal()
+
+soloq_objscore
 ```
 
 For each objective that the team achieves from the list above within a match, one objective point is given to the blue/red team. The graph above shows how completing objectives can result in a win. Matches labeled "Expected" means a team's objective score is higher than the other team and the final result is the team with the higher score won. Matches labeled "Undefined" means the objective score for both teams are equal so the result of the match depends on other factors. Matches labeled "Unexpected means a team's objective score is lower than the other team and the final result is the team with the lower score won. Over 60% of the matches in over 9800 Diamond ranked games show that completing objectives
@@ -378,8 +383,32 @@ soloq_golddiff + pro_golddiff
 ```
 
 ```{r echo = FALSE}
+pro_indepth_stats_revised <- pro_indepth_stats %>% 
+  select(ends_with(c("dragons", "elders", "heralds", "barons", "towers", "inhibitors", "totalgold", "result"))) %>% 
+  mutate_all(as.numeric) %>% 
+  na.omit()
 
+pro_objscore <- pro_indepth_stats_revised %>% 
+  mutate(objective_score_t1 = rowSums(pro_indepth_stats_revised[, as.numeric(c(1,3,5,7,9,13))])) %>% 
+  mutate(objective_score_t2 = rowSums(pro_indepth_stats_revised[, as.numeric(c(2,4,6,8,11,14))])) %>% 
+  mutate(objscore_compare = ifelse((objective_score_t1 > objective_score_t2) & t1_result ==1, 
+                                   "Expected",
+                                   ifelse((objective_score_t1 < objective_score_t2) & t1_result == 0, 
+                                          "Expected",
+                                          ifelse(objective_score_t1 == objective_score_t2, 
+                                                 "Undefined", 
+                                                 "Unexpected"))))
+
+pro_objscore_graph <- ggplot(pro_objscore, aes(x = objscore_compare))+
+  geom_bar()+
+  labs(title = "Prediction of Professional Games \nGiven Objective Score",
+       x = "",
+       y = "Number of Games")+
+  theme_minimal()
+
+soloq_objscore + pro_objscore_graph
 ```
+
 ## Why is this game imapctful to Esports?
 
 - TALK ABOUT TWITCH   
