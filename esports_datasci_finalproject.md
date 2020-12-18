@@ -94,7 +94,7 @@ Before I can answer this question, I will explain what the data is collected on.
 
 The graph above shows the data collected from over 9,800 Diamond ranked games from the Western European server. The focus of this specific analysis for League of Legends shows that among the many variables inside the game over 70% of the games a team wins by non professional players are greatly impacted by the positive gold difference relative to the opposing team where the gold is earned by farming minions and jungle monsters, killing the enemy, and accomplishing the objectives that give gold.
 
-![Ranks from left to right: Iron, Bronze, Silver, Gold, Platinum, Diamond, Master, Granmaster, Challenger](lol_emblems_and_positions.png)
+![Ranks from left to right: Iron, Bronze, Silver, Gold, Platinum, Diamond, Master, Grandmaster, Challenger](lol_emblems_and_positions.png)
 
 Other factors that lead to the result of the game that are less related (although paritally involve gold game for the players) are objectives. In the game on Summoner's Rift there are certain objectives to help the team pull ahead to reach the final goal of destroying the nexus.
 The following is a general list of objectives that the team can achieve located in the pits around the river of the map:
@@ -112,10 +112,19 @@ In order for you to have the best chance possible to win the game, it is extreme
 
 ## Professional League of Legends Esports
 
+-talk about how i only selected the top 4 regions
 -use the data and explain its meaning
 - use the high diamond ranked games data 
 - use the pro matches to show the level and difference between diamond and pro player games
 
+
+```
+## `summarise()` regrouping output by 'league' (override with `.groups` argument)
+```
+
+![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+![](esports_datasci_finalproject_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
 ## Why is this game imapctful to Esports?

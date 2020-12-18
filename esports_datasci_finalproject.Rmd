@@ -43,13 +43,16 @@ high_diamond_ranked_10min <- read.csv("high_diamond_ranked_10min.csv")
 
 twitchdata <- read.csv("twitchdata.csv")
 
-pro_lol_champs <- read.csv("champion_stats.csv")
-
 pro_lol_matches <- read.csv("matches2020.csv")
 
 team_earnings <- read.csv("ee.csv")
 
 lol_tournament_earnings <- read.csv("lolearningsbyteam.csv")
+
+pro_indepth_stats <- read.csv("08_19_2020.csv") %>% 
+  filter(league %in% c("LPL", "LCS", "LCK", "LEC")) %>% 
+  select(c("league", "patch", ends_with(c("dragons", "elders", "heralds", "barons", "towers", "inhibitors", "totalgold", "result")))) %>% 
+  arrange(league)
 ```
 
 ## The Growing Esports Industry
@@ -238,21 +241,23 @@ bargraph_goldDiff <- tibble(side = c("Blue","Blue", "Red", "Red"),
                             winrate = as.numeric(c(blueGoldDiff, 100-blueGoldDiff, redGoldDiff, 100-redGoldDiff)))
 
 
-ggplot(bargraph_goldDiff, aes(x = side, y = winrate, fill = iswin))+
+soloq_golddiff <- ggplot(bargraph_goldDiff, aes(x = side, y = winrate, fill = iswin))+
   geom_bar(stat = "identity", position = 'dodge')+
   theme_minimal()+
   scale_fill_discrete(name = NULL,
                       labels = c("Lose", "Win"))+
-  labs(title =  "Winrates for Teams with a Positive Gold Difference",
+  labs(title =  "Non-Professional Games \nwith a Positive Gold Difference",
        x = "", 
        y = "Percent Winrate")
+
+soloq_golddiff
 ```
 
 Before I can answer this question, I will explain what the data is collected on. In multiplayer League of Legends, there are two main gamemodes on Sommoner's Rift: Normal and Ranked. The difference between the two gamemodes is Ranked gives the players a tier from Iron to Challenger where the players can climd the tier ladder by earning "LP" points. another thing to note is when a player quenes up for a game match on the Summoner's Rift map they will spawn on the right side nexus of the left side nexus where right is blue side and left is red side.
 
 The graph above shows the data collected from over 9,800 Diamond ranked games from the Western European server. The focus of this specific analysis for League of Legends shows that among the many variables inside the game over 70% of the games a team wins by non professional players are greatly impacted by the positive gold difference relative to the opposing team where the gold is earned by farming minions and jungle monsters, killing the enemy, and accomplishing the objectives that give gold.
 
-![Ranks from left to right: Iron, Bronze, Silver, Gold, Platinum, Diamond, Master, Granmaster, Challenger](lol_emblems_and_positions.png)
+![Ranks from left to right: Iron, Bronze, Silver, Gold, Platinum, Diamond, Master, Grandmaster, Challenger](lol_emblems_and_positions.png)
 
 Other factors that lead to the result of the game that are less related (although paritally involve gold game for the players) are objectives. In the game on Summoner's Rift there are certain objectives to help the team pull ahead to reach the final goal of destroying the nexus.
 The following is a general list of objectives that the team can achieve located in the pits around the river of the map:
@@ -277,14 +282,14 @@ lol_objectives_lead_towin <- lol_objectives_lead_towin %>%
                                                  "Undefined", 
                                                  "Unexpected"))))
 
-lol_objectives_lead_towin_table <- lol_objectives_lead_towin %>% 
-  mutate(oneisblueWins = ifelse(oneisblueWins == 0, "Loss", "Won")) %>% 
-  select(oneisblueWins, objective_score_blue, objective_score_red, objscore_compare) 
-
-colnames(lol_objectives_lead_towin_table)[1] <- "Blue Team Result"
-colnames(lol_objectives_lead_towin_table)[2] <- "Blue Team Objective Score"
-colnames(lol_objectives_lead_towin_table)[3] <- "Red Team Objective Score"
-colnames(lol_objectives_lead_towin_table)[4] <- "Prediction"
+# lol_objectives_lead_towin_table <- lol_objectives_lead_towin %>% 
+#   mutate(oneisblueWins = ifelse(oneisblueWins == 0, "Loss", "Won")) %>% 
+#   select(oneisblueWins, objective_score_blue, objective_score_red, objscore_compare) 
+# 
+# colnames(lol_objectives_lead_towin_table)[1] <- "Blue Team Result"
+# colnames(lol_objectives_lead_towin_table)[2] <- "Blue Team Objective Score"
+# colnames(lol_objectives_lead_towin_table)[3] <- "Red Team Objective Score"
+# colnames(lol_objectives_lead_towin_table)[4] <- "Prediction"
 
   
 ggplot(lol_objectives_lead_towin, aes(x = objscore_compare))+
@@ -302,14 +307,79 @@ In order for you to have the best chance possible to win the game, it is extreme
 
 ## Professional League of Legends Esports
 
+-talk about how i only selected the top 4 regions
 -use the data and explain its meaning
 - use the high diamond ranked games data 
 - use the pro matches to show the level and difference between diamond and pro player games
 
 ```{r echo = FALSE}
+pro_lol_revised <- pro_lol_matches %>% 
+  filter(league %in% c("LPL", "LCS", "LCK", "LEC")) %>% 
+  mutate(redwin = ifelse(result == 1, 0, 1))
 
+pro_lol_wins <- tibble(team = c(pro_lol_revised$blueteam, pro_lol_revised$redteam),
+                       result = c(pro_lol_revised$result, pro_lol_revised$redwin),
+                       league = c(pro_lol_revised$league, pro_lol_revised$league)) %>% 
+  group_by(league, team) %>% 
+  summarise(winrate = (sum(result)/n())*100) %>% 
+  arrange(league, desc(winrate)) %>% 
+  ungroup()
+
+pro_lol_wins %>% 
+  group_by(league) %>% 
+  slice_head(n = 3) %>% 
+  ggplot(aes(y = league,
+           x = winrate,
+           color = team))+
+  geom_bar(stat = "identity", 
+           position = 'dodge')+
+  geom_text(aes(label = team), 
+            position = position_dodge(0.9), 
+            hjust = 1.1)+
+  theme_minimal()+
+  labs(title = "Top Winrates of Professional League of Legends Teams",
+           x = "Percent Winrate",
+           y = "League")+
+  theme(legend.position = "none")
+  
+  
 ```
 
+```{r echo = FALSE}
+pro_indepth_stats_gold <- pro_indepth_stats %>% 
+  mutate(t1totalGold = rowSums(pro_indepth_stats[,17:21])) %>% 
+  mutate(t2totalGold = rowSums(pro_indepth_stats[,22:26])) %>% 
+  mutate(goldDiff = t1totalGold - t2totalGold) 
+
+pro_indepth_stats_goldblue <- pro_indepth_stats_gold %>% 
+  filter(goldDiff > 0) %>% 
+  summarise(winrate = sum(t1_result/n())*100)
+
+pro_indepth_stats_goldred <- pro_indepth_stats_gold %>% 
+  filter(goldDiff < 0) %>% 
+  summarise(winrate = sum(t2_result/n())*100)
+
+pro_indepth_stats_goldwinrate <- tibble(team = c("Blue", "Blue", "Red", "Red"),
+                                        result  = c("win", "lose", "win", "lose"),
+                                        winrate = as.numeric(c(pro_indepth_stats_goldblue, 100-pro_indepth_stats_goldblue, 
+                                                    pro_indepth_stats_goldred, 100-pro_indepth_stats_goldred)))
+
+pro_golddiff <- ggplot(pro_indepth_stats_goldwinrate, aes(x = team, y = winrate, fill = result))+
+  geom_bar(stat = "identity", position = 'dodge')+
+  theme_minimal()+
+  scale_fill_discrete(name = NULL,
+                      labels = c("Lose", "Win"))+
+  labs(title = "Professional Games \nwith a Positive Gold Difference",
+       x = "",
+       y  = "Percent Winrates")+
+  theme(legend.position = "none")
+
+soloq_golddiff + pro_golddiff
+```
+
+```{r echo = FALSE}
+
+```
 ## Why is this game imapctful to Esports?
 
 - TALK ABOUT TWITCH   
