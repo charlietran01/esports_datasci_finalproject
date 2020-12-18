@@ -15,7 +15,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+#knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
 ```
 
 ```{r libraries, echo=FALSE}
@@ -59,6 +59,9 @@ The first competitive games started on arcade machines in the late 1970s with Sp
 ![1980s competitve games](1980sgamespicture.png)
 
 The large amount of competitive users led to organized competitions where tens of millions of fans of the top games follow these matches allowing the game companies to profit. Eventually these competitive matches transformed into a sport known as Esports. Many of the top games help create and influence the start of Esports teams and organizations made of world-class gamers. In total, hundreds of millions of US dollars are profitted from the Esports industries only in terms of prize earnings from professional tournaments. 
+
+- (HERE OF BEFORE THE PARAGRAPH ABOVE) DISCUSS THE DATA COLLECTION PROCESS AND POSSIBLY A CLEARER INTRO TO THE TOPIC IF NOT CLEAR ENOUGH ALREADY 
+
 ```{r echo = FALSE}
 barlinegraph <- HistoricalEsportData %>% 
   group_by(year) %>% 
@@ -209,7 +212,7 @@ Of the top four Esports teams that have earned the majority of their prize from 
 
 But before we can discuss the impact of League of Legends, it is good to know what the praise and large following of the game is about. Created in 2009, League legends is a team multiplayer online battle arena where the two teams made of 5 players where the goal is to defeat the enemies' "nexus" or their base located on opposite sides of the map. The map, called "Summoner's Rift, is split by three lanes lined with three turrets in each lane and two more turrets protecting the nexus for each side of the map. In between each lane is an area known as the jungle where jungle monsters (raptors, krugs, wolves, gromp, golem, blue sentinel, and red brambleback)reside. There is also a river that runs across the map with pits home to the Rift Herald, Baron Nashor, and Elemental Dragons. 
 
-Each team chooses a champion that spawn on the map that have with an assigned role: top lane, mid lane, bot lane, support (also in the bot lane), and jungler. Based of the name of their roles, they will play the game in those repective locations. When the game starts, the lane players (also called laners) meet each other in their lane with a small group of minions that continously respawn and walk from the nexus down their repective lanes, while the jungler traverses through the jungle. In each lane, the laners goal is to kill the minions for earning in game gold and also attempt to kill the opposing enemy laner which also grants them a significant amount more gold. The junglers also earn in game gold by killing the jungler monsters or visiting a lane to kill the enemy. This process of killing minions, monsters, and enemy players goes on as each player accumulates gold in order to purchase specialized items to increase the strength and health of each player's champion. The stronger the champion becomes the higher the chance the team can kill the enemies and push towards their base to destray the nexus and win the match.
+Each team chooses a champion that spawn on the map that have with an assigned role: top lane, mid lane, bot lane, support (also in the bot lane), and jungler. Based of the name of their roles, they will play the game in those repective locations. When the game starts, the lane players (also called laners) meet each other in their lane with a small group of minions that continously respawn and walk from the nexus down their repective lanes, while the jungler traverses through the jungle. In each lane, the laners goal is to kill the minions for earning in game gold and also attempt to kill the opposing enemy laner which also grants them a significant amount more gold. The junglers also earn in game gold by killing the jungler monsters or visiting a lane to kill the enemy. This process of killing minions, monsters, and enemy players goes on as each player accumulates gold in order to purchase specialized items to increase the strength and health of each player's champion. The stronger the champion becomes the higher the chance the team can kill the enemies and push towards their base to destroy the nexus and win the match.
 
 The becomes much more complicated when professional players and teams consider the smallest details, stats, and actions. A small mistake by buying the wrong in game item or walking to the wrong area and getting ambushed by the enemy can turn the game around towards the team that would seem to be losing. But what statistics will majorly determines the likelihood the team will win?
 
@@ -244,6 +247,20 @@ ggplot(bargraph_goldDiff, aes(x = side, y = winrate, fill = iswin))+
        x = "", 
        y = "Percent Winrate")
 ```
+
+Before I can answer this question, I will explain what the data is collected on. In multiplayer League of Legends, there are two main gamemodes on Sommoner's Rift: Normal and Ranked. The difference between the two gamemodes is Ranked gives the players a tier from Iron to Challenger where the players can climd the tier ladder by earning "LP" points. another thing to note is when a player quenes up for a game match on the Summoner's Rift map they will spawn on the right side nexus of the left side nexus where right is blue side and left is red side.
+
+The graph above shows the data collected from over 9,800 Diamond ranked games from the Western European server. The focus of this specific analysis for League of Legends shows that among the many variables inside the game over 70% of the games a team wins by non professional players are greatly impacted by the positive gold difference relative to the opposing team where the gold is earned by farming minions and jungle monsters, killing the enemy, and accomplishing the objectives that give gold.
+
+![Ranks from left to right: Iron, Bronze, Silver, Gold, Platinum, Diamond, Master, Granmaster, Challenger](lol_emblems_and_positions.png)
+
+Other factors that lead to the result of the game that are less related (although paritally involve gold game for the players) are objectives. In the game on Summoner's Rift there are certain objectives to help the team pull ahead to reach the final goal of destroying the nexus.
+The following is a general list of objectives that the team can achieve located in the pits around the river of the map:
+- Rift Herald: killing this creature gives the player a drop that can be spawned to act as a battering ram against turrents and other enemy structures that will grant gold to the players
+- Elemental Dragons: There are four elemental dragons that the players can kill that will grant the entire team a buff in creased in a certain stat based on whcih dragon is slain
+- Baron Nashor: A giant serpent-like creature that when killed grants the the player 300 gold on the team. Also gives them power of strengthen the ally minions when the payer is close enough to the minions.
+- Elder Dragon: killing the Elder dragon grants the team 250 gold and strongest individual buff to each player that lasts for a short time.
+
 ```{r echo=FALSE}
 
 lol_objectives_lead_towin <- high_diamond_ranked_10min %>% 
@@ -272,11 +289,17 @@ colnames(lol_objectives_lead_towin_table)[4] <- "Prediction"
   
 ggplot(lol_objectives_lead_towin, aes(x = objscore_compare))+
   geom_bar()+
-  labs(title = "Prediction of Diamond Games with Objecctive Score",
+  labs(title = "Prediction of Diamond Games Given Objective Score",
        x = "",
        y = "Number of Games")+
   theme_minimal()
 ```
+
+For each objective that the team achieves from the list above within a match, one objective point is given to the blue/red team. The graph above shows how completing objectives can result in a win. Matches labeled "Expected" means a team's objective score is higher than the other team and the final result is the team with the higher score won. Matches labeled "Undefined" means the objective score for both teams are equal so the result of the match depends on other factors. Matches labeled "Unexpected means a team's objective score is lower than the other team and the final result is the team with the lower score won. Over 60% of the matches in over 9800 Diamond ranked games show that completing objectives
+
+So what does all this data mean for the average League of legends?
+In order for you to have the best chance possible to win the game, it is extremely important to farm minions and kill jungle monsters to have the safest path towards earning the most gold without dying by the enemy and winning a game. 
+
 ## Professional League of Legends Esports
 
 -use the data and explain its meaning
@@ -289,3 +312,8 @@ ggplot(lol_objectives_lead_towin, aes(x = objscore_compare))+
 
 ## Why is this game imapctful to Esports?
 
+- TALK ABOUT TWITCH   
+
+```{r echo = FALSE}
+
+```
